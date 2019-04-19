@@ -1,9 +1,1 @@
-import re
-
-import requests
-from bs4 import BeautifulSoup
-
-
-# print(place)
-# print(floor)
-# print(metres)
+print(str(192401380000//1000) + "000")

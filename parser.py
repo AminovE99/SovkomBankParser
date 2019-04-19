@@ -7,12 +7,20 @@ from bs4 import BeautifulSoup
 from database import insert_words_list
 
 
-def give_post_to_service():
+def address_to_ocato(address):
+    #думать
+
+def give_post_to_service(address):
+    i = 1
+    ocato = address_to_ocato(address)
+    macroRegionId = "1" + str(ocato // 1000000000) + "000000000"
+    regionId = "1" + str(ocato // 1000000) + "000000"
+    settlementId = "1" + str(ocato // 1000) + "000"
     url = "https://extra.egrp365.ru/api/extra/index.php"
     data = {
-        "macroRegionId": "192000000000",
-        "regionId": "192401000000",
-        "settlementId": "192401380000",
+        "macroRegionId": macroRegionId,
+        "regionId": regionId,
+        "settlementId": settlementId,
         "streetType": "str1",
         "street": "Глазунова",
         "method": "searchByAddress"
@@ -28,7 +36,7 @@ def get_space_and_floor_and_metres(link):
     floor = None
     place = info.split('Описание —')[1].split("<br")[0]  # квартира
     try:
-        floor = info.split('Этаж —')[1].split("<br")[0] # этаж
+        floor = info.split('Этаж —')[1].split("<br")[0]  # этаж
     except IndexError:
         print('этажа нет')
     metres = info.split('Площадь —')[1].split("<br")[0]
@@ -37,7 +45,8 @@ def get_space_and_floor_and_metres(link):
 
 
 if __name__ == '__main__':
-    resp = give_post_to_service().text
+    ocato = input("Напишите ОКАТО для вашего пункта, в котором расположен дом: ")
+    resp = give_post_to_service(ocato).text
     elements = json.loads(resp)['data']
     for el in elements:
         link = 'https://egrp365.ru/reestr?egrp=' + el['cn']
