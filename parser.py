@@ -25,9 +25,6 @@ if __name__ == '__main__':
     resp = give_post_to_service().text
     elements = json.loads(resp)['data']
     for el in elements:
-        print(el['cn'])
-        print(el['address'])
-        print('\n')
         link = 'https://egrp365.ru/reestr?egrp='+el['cn']
-        insert_words_list(kadastr_num=el['cn'],address=el['address'],link_of_kadastr_num=link,floor=None,json=None)
+        insert_words_list(kadastr_num=el['cn'],address=el['address'],link_of_kadastr_num=link,floor=None,json=json.dumps(el))
     # json.dumps(json_text, sort_keys=True, indent=4)
