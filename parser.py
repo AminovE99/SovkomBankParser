@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from dadata import get_useful_info_from_dadata
-from database import insert_words_list
+from database import insert_words_list, insert_unfoundable_word
 
 '''
 
@@ -41,6 +41,10 @@ give_get_to_service - Эта функция находит на главной �
 '''
 
 
+def not_found_info(raw_address):
+    insert_unfoundable_word(raw_address)
+
+
 def give_get_to_service(info):
     url = f"https://egrp365.ru/list4.php"
     data = {
@@ -59,7 +63,7 @@ def give_get_to_service(info):
 
 
 def get_space_and_floor_and_metres(link):
-    soup = BeautifulSoup(''.join(requests.get(link).text))
+    soup = BeautifulSoup(''.join(requests.get(link).text), features="html.parser")
     info = soup.find('div', {"id": "information_about_object"}).contents
     info = str(info)
     floor = None
@@ -82,11 +86,13 @@ def get_space_and_floor_and_metres(link):
 def one_str_address(address):
     info = get_useful_info_from_dadata(address)
     if info == -1:
+        not_found_info(address)
         return -1
     resp = give_get_to_service(info).text
     element = json.loads(resp)
     if element['error'] == 1:
         print("Информация не найдена")
+        not_found_info(address)
         return -1
     egrp = element['data'].split('reestr?egrp=')[1].split('\'')[0]  # Хардкод! Поменять на регулярки
     link = 'https://egrp365.ru/reestr?egrp=' + egrp
@@ -102,19 +108,16 @@ def one_str_address(address):
                       )
 
 
-
-
-
-
-
 if __name__ == '__main__':
     print("1. Написать адрес одной строкой\n"
-          "2. Расширенный поиск")
+          "2. Расширенный поиск\n"
+          "3. Считать все с файла data.txt (custom)")
     choice = input("Введите желаемое действие: ")
+    address = None
+    result = -1
     if choice == '1':
         address = input("Напишите адрес, где расположен дом: ")
-        one_str_address(address)
-    if choice == '2': # Лучше не использовать else, потому что функционал может дополниться
+    if choice == '2':  # Лучше не использовать else, потому что функционал может дополниться
         region = input("Регион: ")
         city = input("Город: ")
         street = input("Улица: ")
@@ -126,4 +129,11 @@ if __name__ == '__main__':
         else:
             address = f"{region},г.{city},{street},д.{house},кв.{flat}"
         print(f"Адрес для валидации: {address}")
-        one_str_address(address)
+    if choice == '3':
+        file = open('data.txt', encoding='utf-8')
+        for line in file:
+            one_str_address(line)  # TODO: сделать запись данных в бд одной транзакцией
+    count = 0
+    while result == -1 and count <= 3:
+        result = one_str_address(address)  # не используется boolean для возможности расширения функционала
+        count += 1
