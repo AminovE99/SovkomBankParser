@@ -68,18 +68,20 @@ def get_space_and_floor_and_metres(link):
     info = str(info)
     floor = None
     place = None
+    handled_address = None
     try:
-        place = info.split('Описание —')[1].split("<br")  # квартира
+        #place = info.split('Описание —')[1].split("<br")  # кварти
+        handled_address = info.split("Другое написание адреса — ")[1].split("<br")[0] # убрав эту строчку, мы получим больше найденных адресов
     except IndexError:
-        print('Земельный участок')
+        print('Не получилось найти handled_adress')
 
     try:
         floor = info.split('Этаж —')[1].split("<br")[0]  # этаж
     except IndexError:
         print('этажа нет')
     metres = info.split('Площадь —')[1].split("<br")[0]
-    info_dict = {'place': place, 'floor': floor, 'metres': metres}
-    print("info_dict" + str(info_dict))
+    info_dict = {'floor': floor, 'metres': metres, 'handled_address': handled_address}
+    print(f"info_dict: {info_dict}")
     return info_dict
 
 
@@ -98,7 +100,8 @@ def one_str_address(address):
     link = 'https://egrp365.ru/reestr?egrp=' + egrp
     info_dict = get_space_and_floor_and_metres(link)
     insert_words_list(kadastr_num=egrp,
-                      address=address,
+                      address=info_dict['handled_address'],
+                      raw_address=address,
                       link_of_kadastr_num=link,
                       floor=info_dict['floor'],
                       json=json.dumps(element),

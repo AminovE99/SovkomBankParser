@@ -2,11 +2,8 @@ import json
 
 import requests
 
-
 API_KEY = "dde0ba13e9b1d4527fe63a87c4094de61c40aa20"
 BASE_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address"
-
-
 
 
 def get_useful_info_from_dadata(raw_address):
@@ -17,7 +14,16 @@ def get_useful_info_from_dadata(raw_address):
         suggest = raw_address.json()['suggestions'][0]['data']
     except IndexError:
         return -1
-    info = {"okato": suggest['okato'], "lat": suggest['geo_lat'], "lon": suggest['geo_lon'],
-            "street_type": suggest["street_type_full"], "street": suggest["street"], "house_num": suggest['house'],
-            'building_num': suggest['block'], "flat_num": suggest['flat'], "region": suggest['region'], "city":suggest['city'], "fias_id":suggest['fias_id']}
+    handled_address = None
+    info = {"okato": suggest['okato'],
+            "lat": suggest['geo_lat'],
+            "lon": suggest['geo_lon'],
+            "street_type": suggest["street_type_full"],
+            "street": suggest["street"],
+            "house_num": suggest['house'],
+            'building_num': suggest['block'],
+            "flat_num": suggest['flat'],
+            "region": suggest['region'],
+            "city": suggest['city'],
+            "fias_id": suggest['fias_id']}
     return info
