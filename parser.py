@@ -1,5 +1,4 @@
 import json
-import re
 
 import requests
 from bs4 import BeautifulSoup
@@ -45,6 +44,10 @@ def give_get_to_service(info):
 
 
 def get_raw_info_dict(link):
+    '''
+    :param link: ссылка, по которой будет парситься сайт
+    :return: Словарь с площадью, этажом и адресом, которые записаны на сайте
+    '''
     soup = BeautifulSoup(''.join(requests.get(link).text), features="html.parser")
     info = soup.find('div', {"id": "information_about_object"}).contents
     info = str(info)
@@ -64,12 +67,15 @@ def get_raw_info_dict(link):
     except ValueError:
         print("ErrorMessage: Этаж записан не числом")
     metres = float(info.split('Площадь —')[1].split("<br")[0].split('кв.м')[0])
-    info_dict = {'floor': floor, 'metres': metres, 'handled_address': founded_address_from_site}
+    info_dict = {'floor': floor, 'metres': metres, 'raw_address': founded_address_from_site}
     print(f"info_dict: {info_dict}")
     return info_dict
 
 
 def one_str_address(address):
+    '''
+    :param address: Адрес, который ввел пользователь в одну строку
+    '''
     info = get_useful_info_from_dadata(address)
     resp = give_get_to_service(info).text
     element = json.loads(resp)
@@ -87,7 +93,7 @@ def one_str_address(address):
     egrp = element['data'].split('reestr?egrp=')[1].split('\'')[0]  # Хардкод! Поменять на регулярки
     link = 'https://egrp365.ru/reestr?egrp=' + egrp
     raw_info_dict = get_raw_info_dict(link)
-    new_info_from_site = get_useful_info_from_dadata(raw_info_dict['handled_address'])
+    new_info_from_site = get_useful_info_from_dadata(raw_info_dict['raw_address'])
     insert_words_list(kadastr_num=egrp,
                       postal_code=info['postal_code'],
                       raw_country=new_info_from_site['country'],

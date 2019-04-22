@@ -38,6 +38,3 @@ SELECT (SELECT count(*)
               raw_street = handled_street AND raw_house_num = handled_house_num AND raw_block = handled_block) --Второе задание
 
 SELECT (SELECT count(*) FROM property_object WHERE )
-
-
--- SELECT count(*) AS righted_raw_address FROM property_object WHERE raw_address = address -- Второй запрос
