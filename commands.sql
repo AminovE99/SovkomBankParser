@@ -30,13 +30,14 @@ SELECT
    WHERE raw_country IS NOT NULL) as is_not_null,
   (SELECT count(*)
    FROM property_object
-   WHERE raw_country is NULL)     as is_null;
+   WHERE raw_country is NULL) as is_null; --Первое задание
 
 SELECT (SELECT count(*)
         FROM property_object
         WHERE raw_region = handled_region AND raw_country = handled_country AND raw_city = handled_city AND
-              raw_street = handled_street AND raw_house_num = handled_house_num AND raw_block = handled_block)
+              raw_street = handled_street AND raw_house_num = handled_house_num AND raw_block = handled_block) --Второе задание
 
+SELECT (SELECT count(*) FROM property_object WHERE )
 
 
 -- SELECT count(*) AS righted_raw_address FROM property_object WHERE raw_address = address -- Второй запрос

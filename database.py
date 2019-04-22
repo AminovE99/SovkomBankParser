@@ -1,6 +1,7 @@
 import psycopg2 as psycopg2
 
-#TODO: Разделить одну таблицу на несколько
+
+# TODO: Разделить одну таблицу на несколько
 
 
 def insert_words_list(kadastr_num,
@@ -87,14 +88,21 @@ def insert_words_list(kadastr_num,
             conn.close()
 
 
-def insert_unfoundable_word(json):
-    sql = "INSERT INTO property_object(json) VALUES (%s)"
+def insert_unfoundable_word(handled_country, handled_region, handled_city, handled_street, handled_house_num,
+                            handled_block, handled_flat):
+    sql = '''INSERT INTO property_object(handled_country,
+handled_region,
+handled_city,
+handled_street,
+handled_house_num,
+handled_block,
+handled_flat) VALUES (%s,%s,%s,%s,%s,%s,%s)'''
     conn = None
     try:
         conn = psycopg2.connect(host="localhost", database="postgres", user="postgres",
                                 password="megavova")
         cur = conn.cursor()
-        cur.execute(sql, (json,))
+        cur.execute(sql, (handled_country, handled_region, handled_city,handled_street,handled_house_num,handled_block,handled_flat))
         conn.commit()
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:

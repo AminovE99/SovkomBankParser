@@ -12,8 +12,14 @@ from database import insert_words_list, insert_unfoundable_word
 # ?street={info['street']}&house={info['house_num']}&building={info['building_num']}&mregion={info['region']}&area=null&city={info['city']}&apartment={info['flat_num']}&link=page&fiasid={info['fias_id']}
 
 
-def not_found_info(raw_address):
-    insert_unfoundable_word(raw_address)
+def not_found_info(handled_country,
+                   handled_region,
+                   handled_city,
+                   handled_street,
+                   handled_house_num,
+                   handled_block,
+                   handled_flat):
+    insert_unfoundable_word(handled_country,handled_region,handled_city,handled_street,handled_house_num,handled_block,handled_flat)
 
 
 def give_get_to_service(info):
@@ -46,12 +52,13 @@ def get_raw_info_dict(link):
     founded_address_from_site = None
     try:
         # place = info.split('Описание —')[1].split("<br")  # кварти
-        founded_address_from_site = info.split("Другое написание адреса — ")[1].split("<br")[0]  # убрав эту строчку, мы получим больше найденных адресов
+        founded_address_from_site = info.split("Другое написание адреса — ")[1].split("<br")[
+            0]  # убрав эту строчку, мы получим больше найденных адресов
     except IndexError:
         print('Не получилось найти handled_adress')
 
     try:
-        floor = int(info.split('Этаж —')[1].split("<br")[0].split("эт")[0]) # этаж
+        floor = int(info.split('Этаж —')[1].split("<br")[0].split("эт")[0])  # этаж
     except IndexError:
         print('InfoMessage: Этажа нет')
     except ValueError:
@@ -68,7 +75,14 @@ def one_str_address(address):
     element = json.loads(resp)
     if element['error'] == 1:
         print("Информация не найдена")
-        not_found_info(resp)
+        not_found_info(handled_country=info['country'],
+                       handled_region=info['region'],
+                       handled_city=info['city'],
+                       handled_street=info['street'],
+                       handled_house_num=info['house_num'],
+                       handled_block=info['building_num'],
+                       handled_flat=info['flat_num']
+                       )
         return -1
     egrp = element['data'].split('reestr?egrp=')[1].split('\'')[0]  # Хардкод! Поменять на регулярки
     link = 'https://egrp365.ru/reestr?egrp=' + egrp
