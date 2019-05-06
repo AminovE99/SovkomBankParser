@@ -26,7 +26,6 @@ def insert_words_list(kadastr_num,
                       handled_flat,
                       link_of_kadastr_num,
                       floor,
-                      json,
                       square,
                       latitude,
                       longitude):
@@ -50,10 +49,9 @@ def insert_words_list(kadastr_num,
     handled_flat,
     link_of_kadastr_num,
     floor,
-    json,
     square,
     latitude,
-    longitude) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) 
+    longitude) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) 
     '''
     conn = None
     try:
@@ -79,7 +77,6 @@ def insert_words_list(kadastr_num,
             handled_flat,
             link_of_kadastr_num,
             floor,
-            json,
             square,
             latitude,
             longitude))

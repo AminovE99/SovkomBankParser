@@ -112,7 +112,6 @@ def one_str_address(address):
                       handled_flat=info['flat_num'],
                       link_of_kadastr_num=link,
                       floor=raw_info_dict['floor'],
-                      json=resp,
                       square=raw_info_dict['metres'],
                       latitude=info['lat'],
                       longitude=info['lon'])
@@ -142,9 +141,9 @@ if __name__ == '__main__':
             print(f"Адрес для валидации: {address}")
     if choice == '3':
         file = open('data.txt', encoding='utf-8')
-    for line in file:
-        one_str_address(line)  # TODO: сделать запись данных в бд одной транзакцией
-    count = 0
-    while result == -1 and count <= 3:
-        result = one_str_address(address)  # не используется boolean для возможности расширения функционала
-        count += 1
+        for line in file:
+            one_str_address(line)  # TODO: сделать запись данных в бд одной транзакцией
+        count = 0
+        while result == -1 and count <= 3:
+            result = one_str_address(address)  # не используется boolean для возможности расширения функционала
+            count += 1

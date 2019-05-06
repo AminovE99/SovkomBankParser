@@ -18,7 +18,6 @@ CREATE TABLE property_object (
   handled_flat        integer,
   link_of_kadastr_num varchar(100),
   floor               integer,
-  json                varchar(100000),
   square              float(16),
   latitude            float(15),
   longitude           float(15)
